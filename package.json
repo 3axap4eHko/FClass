@@ -1,0 +1,20 @@
+{
+  "name": "FClass",
+  "version": "0.0.0",
+  "description": "FClass",
+  "main": "fclass.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "3axap4eHko",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/3axap4eHko/FClass.git"
+  },
+  "bugs": {
+    "url": "https://github.com/3axap4eHko/FClass/issues"
+  },
+  "homepage": "https://github.com/3axap4eHko/FClass#readme"
+}
