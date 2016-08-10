@@ -4,47 +4,53 @@ function promisify(callback, args = []) {
     if (callback instanceof Promise) return callback;
     if (typeof callback !== 'function') return Promise.resolve(callback);
 
-    return new Promise( resolve => resolve(callback(...args)) );
+    return new Promise(resolve => resolve(callback(...args)));
 }
 
 function sequencer(actions, results = []) {
     if (actions.length) {
         const action = actions.shift();
         return promisify(action)
-            .then( result => sequencer(actions, results.concat([result])) )
-            .catch( err => console.error(err) );
+            .then(result => sequencer(actions, results.concat([result])))
+            .catch(err => console.error(err));
     } else {
         return Promise.resolve(results);
     }
 }
 
 function composer(actions) {
-    return Promise.all(actions.map( promisify ));
+    return Promise.all(actions.map(promisify));
 }
 
 function resolveFArgs(fArgs) {
-    const fArgsArray = Object.keys(fArgs).map( key => fArgs[key] );
-    return sequencer(fArgsArray);
+    const fArgsArray = Object.keys(fArgs).map(key => fArgs[key]);
+    return sequencer(fArgsArray)
+        .catch(err => console.error(err));
 }
 
-const global = {};
-
-function FClass (executor) {
+function FClass(executor) {
 
     return (fArgs = {}) => {
+
         return (...children) => {
 
             const state = {};
 
-            return resolveFArgs(fArgs)
-                .then( args => executor(Object.assign({}, ...args, { state }, global) ) )
-                .then( args => {
-                    Object.assign(global, args || {});
-                    return sequencer(children);
-                } );
+            return () => resolveFArgs(fArgs)
+                .then(args => executor(Object.assign({}, ...args, {children, state})))
+                .catch(err => console.error(err));
         }
     };
 }
+
+function App(initFArgs) {
+    return (...children) => {
+        return resolveFArgs(initFArgs)
+            .then(init => sequencer(children));
+    };
+}
+
+FClass.App = App;
 
 FClass.sequencer = sequencer;
 FClass.composer = composer;
