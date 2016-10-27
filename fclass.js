@@ -22,13 +22,32 @@ function composer(actions) {
     return Promise.all(actions.map(promisify));
 }
 
-function resolveFArgs(fArgs) {
-    const fArgsArray = Object.keys(fArgs).map(key => fArgs[key]);
-    return sequencer(fArgsArray)
+function resolveFArgs(args) {
+    const argsArray = Object.keys(args).map(key => args[key]);
+    return sequencer(argsArray)
         .catch(err => console.error(err));
 }
 
-function FClass(executor) {
+const _Args = Symbol('args');
+const _Children = Symbol('children');
+
+class FClass {
+    constructor(args, children) {
+        this[_Args] = args;
+        this[_Children] = children;
+    }
+}
+
+function createFClass(Class, args, children) {
+    const instance = new Class(args, children);
+    if (instance instanceof FClass) {
+
+        return instance;
+    }
+    throw new Error('Class in not instance of FClass');
+}
+
+function createFClassLegacy(args, children) {
 
     return (fArgs = {}) => {
 
@@ -43,16 +62,17 @@ function FClass(executor) {
     };
 }
 
-function App(initFArgs) {
+function App(initArgs, root) {
     return (...children) => {
-        return resolveFArgs(initFArgs)
+        return resolveFArgs(initArgs)
             .then(init => sequencer(children));
     };
 }
 
-FClass.App = App;
+createFClass.App = App;
+createFClass.FClass = FClass;
 
-FClass.sequencer = sequencer;
-FClass.composer = composer;
+createFClass.sequencer = sequencer;
+createFClass.composer = composer;
 
-module.exports = FClass;
+module.exports = createFClass;

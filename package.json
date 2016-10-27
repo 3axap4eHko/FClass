@@ -4,6 +4,7 @@
   "description": "FClass",
   "main": "fclass.js",
   "scripts": {
+    "tr": "js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],
@@ -16,5 +17,8 @@
   "bugs": {
     "url": "https://github.com/3axap4eHko/FClass/issues"
   },
-  "homepage": "https://github.com/3axap4eHko/FClass#readme"
+  "homepage": "https://github.com/3axap4eHko/FClass#readme",
+  "dependencies": {
+    "pug-lexer": "^2.3.0"
+  }
 }

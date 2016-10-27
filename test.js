@@ -5,6 +5,7 @@ const {App, sequencer} = FClass;
 const delayedResult = value => () => new Promise(r => setTimeout(r, 1000, value));
 
 const ServiceManager = FClass(({children}) => {
+    console.log(children);
     return sequencer(children);
 });
 
@@ -22,10 +23,10 @@ const Result = FClass((i) => {
 
 const config = delayedResult({config: {updateInterval: 10}});
 
-App({config})(
-    ServiceManager()(
-        LoadData()(),
-        HandleData()(),
-        Result()()
-    )
+const root = ServiceManager(
+    LoadData(),
+    HandleData(),
+    Result()
 );
+
+App({config}, root);
