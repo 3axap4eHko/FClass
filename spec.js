@@ -5,13 +5,24 @@ const {FClass} = createFClass;
 class Loader extends FClass {
 
 }
+class Initialization extends FClass {
 
-const Initialization = () => {};
-const Render = () => {};
-const Service = () => {};
-const UpdateAccounts = () => {};
-const UpdateAccount = () => {};
-const HandleResults = () => {};
+}
+class Render extends FClass {
+
+}
+class Service extends FClass {
+
+}
+class UpdateAccounts extends FClass {
+
+}
+class UpdateAccount extends FClass {
+
+}
+class HandleResults extends FClass {
+
+}
 
 const result = jsx.fromString(`
 <Loader>

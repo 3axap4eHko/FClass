@@ -19,6 +19,6 @@
   },
   "homepage": "https://github.com/3axap4eHko/FClass#readme",
   "dependencies": {
-    "pug-lexer": "^2.3.0"
+    "jsx-transform": "^2.3.0"
   }
 }

@@ -1,5 +1,3 @@
-
-const h1 = () => {};
 const jsx = require('jsx-transform');
 
 const result = jsx.fromString(`
@@ -8,9 +6,9 @@ const result = jsx.fromString(`
     <link rel="stylesheet" href="test.css" />
 </head>
 <body>
-    <Header>{this.test}</Header>
+    <Header>{$this.test}</Header>
     <ToolBar>
-        <ToolBarItem title="Home" />
+        <ToolBarItem title="Home" idx={1} />
         <ToolBarItem title="About" />
     </ToolBar>
     <script src="test.js"></script>
@@ -18,7 +16,6 @@ const result = jsx.fromString(`
 </html>
 `, {
     factory: 'Tag.create',
-    unknownTagPattern: 'PX({tag})',
     passUnknownTagsToFactory: true,
     unknownTagsAsString: true
 });
@@ -74,15 +71,21 @@ class Tag {
         const nextIntend = ' '.repeat(intendSize*2+2);
         const children = this[_Children].map( c => toChildren(c, intendSize + 2)).join(',\n');
 
-        return `\n${intend}${this[_Name]}(\n${nextIntend}${props}, \n${nextIntend}[${children}]\n${intend})`;
+        return `\n${intend}${this[_Name]}(\n${nextIntend}${props},\n${nextIntend}[${children}]\n${intend})`;
     }
 }
-function render(result) {
-    return eval(result);
-}
-const p = new Proxy({}, {
+const handler = {
     get(target, property, receiver) {
         return '$this.'+property;
     }
-});
-console.log(render.call(p, result).toString());
+};
+function render(result) {
+    const $this = new Proxy({}, handler);
+    return eval(result);
+}
+const p = new Proxy({}, handler);
+
+const template = render.call(p, result).toString();
+console.log(`<?php
+${template}
+`);

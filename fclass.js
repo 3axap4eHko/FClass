@@ -47,21 +47,6 @@ function createFClass(Class, args, children) {
     throw new Error('Class in not instance of FClass');
 }
 
-function createFClassLegacy(args, children) {
-
-    return (fArgs = {}) => {
-
-        return (...children) => {
-
-            const state = {};
-
-            return () => resolveFArgs(fArgs)
-                .then(args => executor(Object.assign({}, ...args, {children, state})))
-                .catch(err => console.error(err));
-        }
-    };
-}
-
 function App(initArgs, root) {
     return (...children) => {
         return resolveFArgs(initArgs)
